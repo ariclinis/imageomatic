@@ -71,7 +71,17 @@ Int2 imagePaint(String cor, Int2 n, Image res)
 
 Int2 imageNegative(Image img, Int2 n, Image res)
 {
-	return int2Error;
+	Int2 i;
+	for(i.y=0;i.y<n.y; i.y++){
+		for(i.x=0;i.x<n.x; i.x++){
+			Pixel newI = img[i.x][i.y];
+			newI.red = 255 - newI.red;
+			newI.green =255- newI.green;
+			newI.blue = 255- newI.blue;
+			res[i.x][i.y] = newI;
+		}
+	}
+	return n;
 }
 
 Int2 imageDroplet(Int2 n, Image res)
@@ -88,14 +98,13 @@ Int2 imageGrayscale(Image img, Int2 n, Image res)
 {
 	Int2 i;
 	for(i.y=0;i.y<n.y; i.y++){
-		for(i.x;i.x<n.x; i.x++){
+		for(i.x=0;i.x<n.x; i.x++){
 			Pixel newI = img[i.x][i.y];
 			Byte cinza = (newI.red + newI.green + newI.blue)/3;
 			newI.red = cinza;
 			newI.green = cinza;
 			newI.blue = cinza;
 			res[i.x][i.y] = newI;
-
 		}
 	}
 	return n;
@@ -118,7 +127,23 @@ Int2 imagePosterize(Image img, Int2 n, int factor, Image res)
 
 Int2 imageHalf(Image img, Int2 n, Image res)
 {
-	return int2Error;
+	Int2 i;
+	Int2 i2;
+	Int2 nFinal = n;
+	nFinal.x =n.x/2;
+	nFinal.y =n.y/2;
+	i2.y=0;
+	i2.x=0;
+	for(i.y=0;i.y<n.y; i.y=i.y+2){
+		for(i.x=0;i.x<n.x; i.x=i.x+2){
+				Pixel newI = img[i.x][i.y];
+				res[i2.x][i2.y] = img[i.x][i.y];
+				i2.x++;
+		}
+		i2.x=0;
+		i2.y++;
+	}
+	return nFinal;
 }
 
 Int2 imageFunctionPlotting(DoubleFun fun, int scale, Int2 n, Image res)
