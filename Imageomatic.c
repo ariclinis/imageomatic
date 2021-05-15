@@ -86,7 +86,19 @@ Int2 imageMask(Image img1, Int2 n1, Image img2, Int2 n2, Image res) // pre: int2
 
 Int2 imageGrayscale(Image img, Int2 n, Image res)
 {
-	return int2Error;
+	Int2 i;
+	for(i.y=0;i.y<n.y; i.y++){
+		for(i.x;i.x<n.x; i.x++){
+			Pixel newI = img[i.x][i.y];
+			Byte cinza = (newI.red + newI.green + newI.blue)/3;
+			newI.red = cinza;
+			newI.green = cinza;
+			newI.blue = cinza;
+			res[i.x][i.y] = newI;
+
+		}
+	}
+	return n;
 }
 
 Int2 imageBlur(Image img, Int2 n, int nivel, Image res)
