@@ -28,7 +28,8 @@ Comentarios:
 */
 
 #include "Imageomatic.h"
-
+#include <stdio.h>
+#include <stdbool.h>
 
 
 /*** TYPE Int2 ***/
@@ -63,11 +64,128 @@ Int2 imageCopy(Image img, Int2 n, Image res)
 	}
 	return n;
 }
+char *getHexa(char linha[256]){
+	char *palavra = malloc(6*sizeof(char));
+	int i=0;
+	while(i<6 ){
+		palavra[i]=linha[i];
+		i= i+1;
+	}
+	return palavra;
+}
+char *getLiteral(char linha[256], int size){
+	char *palavra = malloc(sizeof(char)*size);
+	int i=0;
+	int i2=7;
+	while(i< size){
+		palavra[i]=linha[i2];
+		i= i+1;
+		i2++;
+	}
+	return palavra;
+}
+
+int convertHexaToDecimal(String hex){
+    long long decimal, place;
+    int i = 0, val, len;
+
+    decimal = 0;
+
+
+    /* Find the length of total number of hex digit */
+    len = strlen(hex);
+    len--;
+
+    /*
+     * Iterate over each hex digit
+     */
+    for(i=0; hex[i]!='\0'; i++)
+    {
+ 
+        /* Find the decimal representation of hex[i] */
+        if(hex[i]>='0' && hex[i]<='9')
+        {
+            val = hex[i] - 48;
+        }
+        else if(hex[i]>='a' && hex[i]<='f')
+        {
+            val = hex[i] - 97 + 10;
+        }
+        else if(hex[i]>='A' && hex[i]<='F')
+        {
+            val = hex[i] - 65 + 10;
+        }
+
+        decimal += val * pow(16, len);
+        len--;
+    }
+	return decimal;
+}
+char *getInHexa(String h, int numberPosition){
+	char *result = malloc(sizeof(char)*2);
+	int n=0;
+	for(int i=numberPosition; i<(numberPosition+2); i++){
+		result[n++]=h[i];
+	}
+	return result;
+}
+char *getRedInHexa(String h){
+	return getInHexa(h, 0);
+}
+char *getGreenInHexa(char *h){
+	return getInHexa(h, 2);
+}
+char *getBlueInHexa(char *h){
+	return getInHexa(h, 4);
+}
+
 
 Int2 imagePaint(String cor, Int2 n, Image res)
 {
-	return int2Error;
+	FILE *cores;
+	int found=0;
+	char linha[256];
+	cores = fopen("./img/cores.txt","r");
+	Byte red, green, blue;
+	String ca = "2fff09";
+	while(fgets(linha, 256, cores)!=NULL && found==0){
+		char *hexa = getHexa(linha);
+		char *literal = getLiteral(linha, strlen(cor));
+		
+		if(strcmp(hexa, cor)==0 || strcmp(literal, cor)==0){
+			Int2 i;
+			Pixel newP;
+			//Criar ficheiro
+			String dir = "./img/";
+			strcat(dir,cor);
+			strcat(dir,".png");
+			
+
+			newP.red = convertHexaToDecimal(getRedInHexa(hexa));
+			newP.green =convertHexaToDecimal(getGreenInHexa(hexa));
+			newP.blue = convertHexaToDecimal(getBlueInHexa(hexa));
+			for(i.y=0;i.y<n.y; i.y++){
+				for(i.x=0;i.x<n.x; i.x++){
+					res[i.x][i.y] = newP;
+				}
+			}
+			imageStore(dir, res, n);
+
+			found = 1;
+
+		}
+	}
+				//printf("Hexa : %i\n",convertHexaToDecimal(ca));
+				//printf("Red : %i\n",convertHexaToDecimal(getRedInHexa(ca)));
+				//printf("green : %i\n",convertHexaToDecimal(getGreenInHexa(ca)));
+				//printf("blue : %i\n",convertHexaToDecimal(getBlueInHexa(ca)));
+
+
+	return n;
 }
+
+
+
 
 Int2 imageNegative(Image img, Int2 n, Image res)
 {
