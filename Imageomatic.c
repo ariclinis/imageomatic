@@ -77,7 +77,7 @@ char *getLiteral(char linha[256], int size){
 	char *palavra = malloc(sizeof(char)*size);
 	int i=0;
 	int i2=7;
-	while(i< size){
+	while(i<=size){
 		palavra[i]=linha[i2];
 		i= i+1;
 		i2++;
@@ -90,7 +90,6 @@ int convertHexaToDecimal(String hex){
     int i = 0, val, len;
 
     decimal = 0;
-
 
     /* Find the length of total number of hex digit */
     len = strlen(hex);
@@ -139,28 +138,64 @@ char *getBlueInHexa(char *h){
 	return getInHexa(h, 4);
 }
 
+void createImage(Int2 n,String hexa, Image res){
+	Int2 i;
+	Pixel newP;
+	newP.red = convertHexaToDecimal(getRedInHexa(hexa));
+	newP.green =convertHexaToDecimal(getGreenInHexa(hexa));
+	newP.blue = convertHexaToDecimal(getBlueInHexa(hexa));
+	for(i.y=0;i.y<n.y; i.y++){
+		for(i.x=0;i.x<n.x; i.x++){
+			res[i.x][i.y] = newP;
+		}
+	}
+}
+
+void concatenar(char *original, char *add) {
+    while (*original)
+        original++;
+
+    while (*add) {
+        *original = *add;
+        add++;
+        original++;
+    }
+    *original = '\0';
+}
 
 Int2 imagePaint(String cor, Int2 n, Image res)
 {
 	FILE *cores;
 	int found=0;
 	char linha[256];
-	cores = fopen("./img/cores.txt","r");
+	cores = fopen(colorsFileName, "r");
 	Byte red, green, blue;
-	String ca = "2fff09";
-	while(fgets(linha, 256, cores)!=NULL && found==0){
-		char *hexa = getHexa(linha);
-		char *literal = getLiteral(linha, strlen(cor));
-		
-		if(strcmp(hexa, cor)==0 || strcmp(literal, cor)==0){
-			Int2 i;
-			Pixel newP;
+	//String ca = "2fff09";
+	Int2 i;
+	String hexa;
+	String literal;
+	String literal2;
+	char s[2]=" ";
+	Pixel newP;
 			//Criar ficheiro
-			String dir = "./img/";
-			strcat(dir,cor);
-			strcat(dir,".png");
-			
+	String dir = "./img/";
+	strcat(dir,cor);
+	strcat(dir,".png");
+	String linha_aux;
+	while(fgets(linha, 256, cores)!=NULL && found==0){
+		
+		strcpy(linha_aux,linha);
+		strtok(linha, s);
+		printf("%s- \n",linha);
+		concatenar(linha," ");
+		strtok(linha_aux, linha);
+		strtok(linha_aux, " ");
 
+		
+		printf("%s-%s- \n",linha,linha_aux);
+		//printf("%li-%li \n",strlen(hexa),strlen(literal2));
+		/*if(strcmp(hexa, cor)==0 || strcmp(literal, cor)==0){
+			
 			newP.red = convertHexaToDecimal(getRedInHexa(hexa));
 			newP.green =convertHexaToDecimal(getGreenInHexa(hexa));
 			newP.blue = convertHexaToDecimal(getBlueInHexa(hexa));
@@ -169,19 +204,25 @@ Int2 imagePaint(String cor, Int2 n, Image res)
 					res[i.x][i.y] = newP;
 				}
 			}
-			imageStore(dir, res, n);
-
 			found = 1;
-
-		}
+			imageStore(dir, res, n);
+			
+			return n;
+		}*/
 	}
-				//printf("Hexa : %i\n",convertHexaToDecimal(ca));
-				//printf("Red : %i\n",convertHexaToDecimal(getRedInHexa(ca)));
-				//printf("green : %i\n",convertHexaToDecimal(getGreenInHexa(ca)));
-				//printf("blue : %i\n",convertHexaToDecimal(getBlueInHexa(ca)));
+	/*
+		newP.red = 0;
+		newP.green = 0;
+		newP.blue = 0;
+		for(i.y=0;i.y<n.y; i.y++){
+			for(i.x=0;i.x<n.x; i.x++){
+				res[i.x][i.y] = newP;
+			}
+		}
+		imageStore(dir, res, n);
 
-
-	return n;
+		return n;
+		*/
 }
 
 
@@ -235,7 +276,9 @@ Int2 imageBlur(Image img, Int2 n, int nivel, Image res)
 
 Int2 imageRotation90(Image img, Int2 n, Image res)
 {
-	return int2Error;
+
+x <<.<<
+	return n;
 }
 
 Int2 imagePosterize(Image img, Int2 n, int factor, Image res)
