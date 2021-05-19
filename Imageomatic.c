@@ -245,7 +245,25 @@ Int2 imageNegative(Image img, Int2 n, Image res)
 
 Int2 imageDroplet(Int2 n, Image res)
 {
-	return int2Error;
+	Int2 i;
+	Int2 centro = int2Half(n);
+	for(i.y=0;i.y<n.y; i.y++){
+		for(i.x=0;i.x<n.x; i.x++){
+			Pixel newI ;
+			double dist = int2Distance(centro, i);
+			Byte cinza = 0.7*MAX_COLOR+(0.3*sin(dist/20.0)*MAX_COLOR);
+			newI.red = cinza;
+			newI.green = cinza;
+			newI.blue = cinza;
+			res[i.x][i.y] = newI;
+		}
+	}
+	String dir = "./img/";
+	strcat(dir,"droplet");
+	strcat(dir,".png");
+	imageStore(dir, res, n);
+
+	return n;
 }
 
 Int2 imageMask(Image img1, Int2 n1, Image img2, Int2 n2, Image res) // pre: int2Equals(n1, n2)
@@ -277,14 +295,73 @@ Int2 imageBlur(Image img, Int2 n, int nivel, Image res)
 Int2 imageRotation90(Image img, Int2 n, Image res)
 {
 
-x <<.<<
+	Int2 i;
+	for(i.y=0;i.y<n.y; i.y++){
+		for(i.x=0;i.x<n.x; i.x++){
+			res[i.y][i.x] = img[i.x][n.y-i.y-1];
+		}
+	}
+	i.x=n.x;
+	i.y=n.y;
+	n.x=i.y;
+	n.y=i.y;
 	return n;
+}
+
+
+int convertColorToNewLevel(Byte color,int *n,int size){
+	int c = color;
+	int i=0;
+	int newColor;
+	int found =0;
+	while (i<size && found==0)
+	{
+		/* code */
+		if(c<n[i]){
+			found =1;
+			newColor = n[i-1];
+		}else if(c == n[1]){
+			found =1;
+			newColor = c;
+		}else if(c>n[size-1]){
+			found =1;
+			newColor = n[size-1];
+		}
+		i++;
+	}
+
+	return newColor;
 }
 
 Int2 imagePosterize(Image img, Int2 n, int factor, Image res)
 {
-	return int2Error;
+	Int2 i;
+	int i2=1;
+	int size_vector = pow(2,factor);
+	int total = 256/(size_vector);
+	int vectorValoresPossiveis[size_vector];
+	vectorValoresPossiveis[0]=0;
+	while (i2<(size_vector))
+	{
+		vectorValoresPossiveis[i2] = vectorValoresPossiveis[i2-1] + total;
+		i2++;
+	}
+	
+	
+	for(i.y=0;i.y<n.y; i.y++){
+		for(i.x=0;i.x<n.x; i.x++){
+			Pixel newI = img[i.x][i.y];
+			
+			newI.red = convertColorToNewLevel(newI.red, vectorValoresPossiveis,size_vector);
+			newI.green = convertColorToNewLevel(newI.green, vectorValoresPossiveis,size_vector);
+			newI.blue = convertColorToNewLevel(newI.blue, vectorValoresPossiveis,size_vector);
+			
+			res[i.x][i.y] = newI;
+		}
+	}
+	return n;
 }
+
 
 Int2 imageHalf(Image img, Int2 n, Image res)
 {
