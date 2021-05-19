@@ -287,11 +287,6 @@ Int2 imageGrayscale(Image img, Int2 n, Image res)
 	return n;
 }
 
-Int2 imageBlur(Image img, Int2 n, int nivel, Image res)
-{
-	return int2Error;
-}
-
 Int2 imageRotation90(Image img, Int2 n, Image res)
 {
 
@@ -359,6 +354,44 @@ Int2 imagePosterize(Image img, Int2 n, int factor, Image res)
 			res[i.x][i.y] = newI;
 		}
 	}
+	return n;
+}
+
+int averageColor(Byte color, int sum, int count) {
+	int avColor;
+	
+	avColor = sum/count;
+	return avColor;
+}
+
+Int2 imageBlur(Image img, Int2 n, int nivel, Image res)
+{
+	Int2 i;
+	Int2 i2;
+	int sum = 0;
+	int count= 0;
+
+	for(i.y=0;i.y<n.y; i.y++){
+		for(i.x=0;i.x<n.x; i.x++){
+			Pixel newI = img[i.x][i.y];
+			
+			//verificar se nao pega pixel fora da imagem??
+			
+			for(i2.y-nivel; i2.y+nivel; i2.y++){
+				for(i2.x-nivel; i2.x+nivel; i2.x++){
+					sum = sum + int2(i2.y, i2.x);
+					count++;
+				}
+			}
+
+			newI.red = averageColor(newI.red, sum, count);
+			newI.green = averageColor(newI.green, sum, count);
+			newI.blue = averageColor(newI.blue, sum, count);
+			
+			res[i.x][i.y] = newI;
+		}
+	}
+
 	return n;
 }
 
