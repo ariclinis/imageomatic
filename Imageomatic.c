@@ -364,40 +364,63 @@ int averageColor(Byte color, int sum, int count) {
 	return avColor;
 }
 
+
 Int2 imageBlur(Image img, Int2 n, int nivel, Image res)
 {
 	Int2 i;
-	Int2 i2;
-	int sum = 0;
-	int count= 0;
-
+	int size = 2*nivel +1;
+	double rn=0;
+	double gn=0;
+	double bn=0;
 	for(i.y=0;i.y<n.y; i.y++){
 		for(i.x=0;i.x<n.x; i.x++){
-			Pixel newI = img[i.x][i.y];
-			
-			//verificar se nao pega pixel fora da imagem??
-			
-			for(i2.y-nivel; i2.y+nivel; i2.y++){
-				for(i2.x-nivel; i2.x+nivel; i2.x++){
-					sum = sum + int2(i2.y, i2.x);
-					count++;
+			// Inicialização das variaveis para a subMatix
+			Int2 iSub;
+			Pixel p;
+			Pixel pResult;
+			pResult.red =0;
+			pResult.green =0;
+			pResult.blue =0;
+
+			int sumResult=0;
+			// percorrer a subMatrix 
+			for(iSub.y=(i.y-nivel);iSub.y<size; iSub.y++){
+				if(iSub.y>=0 && iSub.y<n.y){
+					for(iSub.x=(i.x-nivel);iSub.x<size; iSub.x++){
+						if (iSub.x>=0 && iSub.x<n.x){
+							/* code */
+							p = img[iSub.x][iSub.y];
+							rn = rn+ p.red;
+							gn = gn + p.green;
+							bn = bn + p.blue;
+							sumResult++;
+							printf("pixel: %d %d %d ) %f %f %f %i\n",p.red,p.green,p.blue,rn,gn,bn,sumResult);
+
+						}
+						
+					}
 				}
 			}
-
-			newI.red = averageColor(newI.red, sum, count);
-			newI.green = averageColor(newI.green, sum, count);
-			newI.blue = averageColor(newI.blue, sum, count);
 			
-			res[i.x][i.y] = newI;
+			double r = (rn)/sumResult;
+			double g = (gn)/sumResult;
+			double b = (bn)/sumResult;
+
+			pResult.red =r;
+			pResult.green =g;
+			pResult.blue =b;
+			res[i.x][i.y] = pResult;
+			//printf("%d %d %d %i\n",pResult.red,pResult.green,pResult.blue,sumResult);
+
+			//fim do fetch da SubMatrix
+
 		}
 	}
 
 	return n;
 }
 
-
-Int2 imageHalf(Image img, Int2 n, Image res)
-{
+Int2 imageHalf(Image img, Int2 n, Image res){
 	Int2 i;
 	Int2 i2;
 	Int2 nFinal = n;
