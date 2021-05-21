@@ -195,7 +195,6 @@ Int2 imagePaint(String cor, Int2 n, Image res)
 			}
 			linha_aux = strtok(NULL, " ");
   		}
-		
 		// a parte literal vem sempre com um caracter a mais, entao eliminanos a ultima posicao ;)
 		literal[strlen(literal)-1]='\0';
 
@@ -281,7 +280,7 @@ Int2 imageMask(Image img1, Int2 n1, Image img2, Int2 n2, Image res) // pre: int2
 		for(i.x=0;i.x<n1.x; i.x++){
 			Pixel newI1 = img1[i.x][i.y];
 			Pixel newI2 = img2[i.x][i.y];
-			newI1.red = newI1.red*(newI2.red/(double)MAX_COLOR);;
+			newI1.red = newI1.red*(newI2.red/(double)MAX_COLOR);
 			newI1.green = newI1.green*(newI2.green/(double)MAX_COLOR);
 			newI1.blue = newI1.blue*(newI2.blue/(double)MAX_COLOR);
 			res[i.x][i.y] = newI1;
