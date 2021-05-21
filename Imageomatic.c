@@ -268,7 +268,19 @@ Int2 imageDroplet(Int2 n, Image res)
 
 Int2 imageMask(Image img1, Int2 n1, Image img2, Int2 n2, Image res) // pre: int2Equals(n1, n2)
 {
-	return int2Error;
+	Int2 i;
+	for(i.y=0;i.y<n1.y; i.y++){
+		for(i.x=0;i.x<n1.x; i.x++){
+			Pixel newI1 = img1[i.x][i.y];
+			Pixel newI2 = img2[i.x][i.y];
+			newI1.red = newI1.red*(newI2.red/(double)MAX_COLOR);;
+			newI1.green = newI1.green*(newI2.green/(double)MAX_COLOR);
+			newI1.blue = newI1.blue*(newI2.blue/(double)MAX_COLOR);
+			res[i.x][i.y] = newI1;
+		}
+	}
+
+	return n1;
 }
 
 Int2 imageGrayscale(Image img, Int2 n, Image res)
@@ -369,49 +381,61 @@ Int2 imageBlur(Image img, Int2 n, int nivel, Image res)
 {
 	Int2 i;
 	int size = 2*nivel +1;
-	double rn=0;
-	double gn=0;
-	double bn=0;
+	int rn=0;
+	int gn=0;
+	int bn=0;
 	for(i.y=0;i.y<n.y; i.y++){
 		for(i.x=0;i.x<n.x; i.x++){
 			// Inicialização das variaveis para a subMatix
-			Int2 iSub;
+			Int2 iSub = i;
+			Image subMatrix;
 			Pixel p;
 			Pixel pResult;
-			pResult.red =0;
-			pResult.green =0;
-			pResult.blue =0;
+
+			//Preencher a sub Matriz
 
 			int sumResult=0;
 			// percorrer a subMatrix 
-			for(iSub.y=(i.y-nivel);iSub.y<size; iSub.y++){
-				if(iSub.y>=0 && iSub.y<n.y){
+			int c = i.x-nivel;
+			int c1 = 0;
+			
+			for(iSub.y=(i.y-nivel); iSub.y<=size; iSub.y++){
+				if(iSub.y>=0 && iSub.y<n.y-1){
 					for(iSub.x=(i.x-nivel);iSub.x<size; iSub.x++){
 						if (iSub.x>=0 && iSub.x<n.x){
 							/* code */
 							p = img[iSub.x][iSub.y];
-							rn = rn+ p.red;
-							gn = gn + p.green;
-							bn = bn + p.blue;
+							if(sumResult==0){
+								rn = p.red;
+								gn = p.green;
+								bn = p.blue;
+							}else{
+								rn = p.red+rn;
+								gn = p.green+gn;
+								bn = p.blue+bn;
+							}
 							sumResult++;
-							printf("pixel: %d %d %d ) %f %f %f %i\n",p.red,p.green,p.blue,rn,gn,bn,sumResult);
+							
+							//printf("pixel: %d %d %d ) %d %d %d %i\n",p.red,p.green,p.blue,rn,gn,bn,sumResult);
 
 						}
 						
 					}
 				}
 			}
+			printf("%d %d %d %i\n",rn,gn,bn,sumResult);
+
 			
-			double r = (rn)/sumResult;
+			/*double r = (rn)/sumResult;
 			double g = (gn)/sumResult;
 			double b = (bn)/sumResult;
 
 			pResult.red =r;
 			pResult.green =g;
 			pResult.blue =b;
-			res[i.x][i.y] = pResult;
-			//printf("%d %d %d %i\n",pResult.red,pResult.green,pResult.blue,sumResult);
-
+			res[i.x][i.y] = pResult;*/
+			
+			
 			//fim do fetch da SubMatrix
 
 		}
