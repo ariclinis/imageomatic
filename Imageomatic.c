@@ -174,31 +174,39 @@ Int2 imagePaint(String cor, Int2 n, Image res)
 	Int2 i;
 	String hexa;
 	String literal;
-	String literal2;
-	char s[2]=" ";
 	Pixel newP;
 			//Criar ficheiro
 	String dir = "./img/";
 	strcat(dir,cor);
 	strcat(dir,".png");
-	String linha_aux;
+	
+	const char s[2] = " ";
 	while(fgets(linha, 256, cores)!=NULL && found==0){
 		
-		strcpy(linha_aux,linha);
-		strtok(linha, s);
-		printf("%s- \n",linha);
-		concatenar(linha," ");
-		strtok(linha_aux, linha);
-		strtok(linha_aux, " ");
-
+		char *linha_aux = strtok(linha, s);
+		int i2=0;
+		// separa a linha em duas partes, Hexa e literal
+		while( linha_aux != NULL ) {
+			if(i2==0){
+				strcpy(hexa,linha_aux);
+				i2=1;
+			}else{
+				strcpy(literal,linha_aux);
+			}
+			linha_aux = strtok(NULL, " ");
+  		}
 		
-		printf("%s-%s- \n",linha,linha_aux);
-		//printf("%li-%li \n",strlen(hexa),strlen(literal2));
-		/*if(strcmp(hexa, cor)==0 || strcmp(literal, cor)==0){
+		// a parte literal vem sempre com um caracter a mais, entao eliminanos a ultima posicao ;)
+		literal[strlen(literal)-1]='\0';
+
+		// compara se a cor e igual a parte literal ou hexa 
+		if(strcmp(hexa, cor)==0 || strcmp(literal, cor)==0){
 			
+			//convert as partes hexa decimal para inteiro
 			newP.red = convertHexaToDecimal(getRedInHexa(hexa));
 			newP.green =convertHexaToDecimal(getGreenInHexa(hexa));
 			newP.blue = convertHexaToDecimal(getBlueInHexa(hexa));
+			// preeenche a Imagem Result com a cor
 			for(i.y=0;i.y<n.y; i.y++){
 				for(i.x=0;i.x<n.x; i.x++){
 					res[i.x][i.y] = newP;
@@ -208,9 +216,9 @@ Int2 imagePaint(String cor, Int2 n, Image res)
 			imageStore(dir, res, n);
 			
 			return n;
-		}*/
+		}
 	}
-	/*
+	//Caso a Cor nao for encontrada no ficheiro de cores, cria a imagem 000
 		newP.red = 0;
 		newP.green = 0;
 		newP.blue = 0;
@@ -222,7 +230,7 @@ Int2 imagePaint(String cor, Int2 n, Image res)
 		imageStore(dir, res, n);
 
 		return n;
-		*/
+		
 }
 
 
