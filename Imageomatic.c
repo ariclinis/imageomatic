@@ -138,18 +138,7 @@ char *getBlueInHexa(char *h){
 	return getInHexa(h, 4);
 }
 
-void createImage(Int2 n,String hexa, Image res){
-	Int2 i;
-	Pixel newP;
-	newP.red = convertHexaToDecimal(getRedInHexa(hexa));
-	newP.green =convertHexaToDecimal(getGreenInHexa(hexa));
-	newP.blue = convertHexaToDecimal(getBlueInHexa(hexa));
-	for(i.y=0;i.y<n.y; i.y++){
-		for(i.x=0;i.x<n.x; i.x++){
-			res[i.x][i.y] = newP;
-		}
-	}
-}
+
 
 void concatenar(char *original, char *add) {
     while (*original)
@@ -388,60 +377,51 @@ Int2 imageBlur(Image img, Int2 n, int nivel, Image res)
 {
 	Int2 i;
 	int size = 2*nivel +1;
-	int rn=0;
-	int gn=0;
-	int bn=0;
+	
 	for(i.y=0;i.y<n.y; i.y++){
 		for(i.x=0;i.x<n.x; i.x++){
 			// Inicialização das variaveis para a subMatix
-			Int2 iSub = i;
-			Image subMatrix;
+			Int2 iSub ;
+			Int2 iSub_aux ;
 			Pixel p;
 			Pixel pResult;
-
+			int rn=0;
+			int gn=0;
+			int bn=0;
 			//Preencher a sub Matriz
 
 			int sumResult=0;
 			// percorrer a subMatrix 
 			int c = i.x-nivel;
-			int c1 = 0;
 			
-			for(iSub.y=(i.y-nivel); iSub.y<=size; iSub.y++){
+			
+
+			iSub_aux.y = i.y-nivel;
+			iSub_aux.x = i.x-nivel;
+			for(iSub.y= iSub_aux.y; iSub.y<iSub_aux.y+size; iSub.y++){
 				if(iSub.y>=0 && iSub.y<n.y-1){
-					for(iSub.x=(i.x-nivel);iSub.x<size; iSub.x++){
+					for(iSub.x=iSub_aux.x;iSub.x<iSub_aux.x+size; iSub.x++){
 						if (iSub.x>=0 && iSub.x<n.x){
 							/* code */
 							p = img[iSub.x][iSub.y];
-							if(sumResult==0){
-								rn = p.red;
-								gn = p.green;
-								bn = p.blue;
-							}else{
-								rn = p.red+rn;
-								gn = p.green+gn;
-								bn = p.blue+bn;
-							}
+							rn = p.red+rn;
+							gn = p.green+gn;
+							bn = p.blue+bn;
 							sumResult++;
-							
-							//printf("pixel: %d %d %d ) %d %d %d %i\n",p.red,p.green,p.blue,rn,gn,bn,sumResult);
-
 						}
 						
 					}
 				}
 			}
-			printf("%d %d %d %i\n",rn,gn,bn,sumResult);
-
 			
-			/*double r = (rn)/sumResult;
-			double g = (gn)/sumResult;
-			double b = (bn)/sumResult;
+			double r = ((double)(rn))/((double)sumResult);
+			double g = ((double)gn)/((double)sumResult);
+			double b = ((double)bn)/((double)sumResult);
 
 			pResult.red =r;
 			pResult.green =g;
 			pResult.blue =b;
-			res[i.x][i.y] = pResult;*/
-			
+			res[i.x][i.y] = pResult;
 			
 			//fim do fetch da SubMatrix
 
