@@ -473,7 +473,31 @@ Int2 imageHalf(Image img, Int2 n, Image res){
 
 Int2 imageFunctionPlotting(DoubleFun fun, int scale, Int2 n, Image res)
 {
-	return int2Error;
+	Int2 i;
+
+	Int2 centro = int2Half(n);
+	for(i.y=0;i.y<n.y; i.y++){
+		
+		for(i.x=0;i.x<n.x; i.x++){
+				Pixel newI = res[i.x][i.y];
+				if(i.x==centro.x || i.y==centro.y){
+					//preto
+					newI.red = 0;
+					newI.green = 0;
+					newI.blue = 0;
+				}else{
+					//branco
+					newI.red = 255;
+					newI.green = 255;
+					newI.blue = 255;
+					
+				}
+				res[i.x][i.y] = newI;
+				
+		}
+	}
+	imageStore("./img/function.png",res,n);
+	return n;
 }
 
 Int2 imageOrderedDithering(Image img, Int2 n, Image res)
@@ -489,11 +513,61 @@ Int2 imageOrderedDithering(Image img, Int2 n, Image res)
 					{15, 47,  7, 39, 13, 45,  5, 37},
 					{63, 31, 55, 23, 61, 29, 53, 21}
 			};
-	return int2Error;
+
+	Int2 i;
+	
+	for(i.y=0;i.y<n.y; i.y++){
+		for(i.x=0;i.x<n.x; i.x++){
+			// get patamar
+			int p=0;
+			Int2 iPatamar;
+			iPatamar.x=0;
+			iPatamar.y=0;
+			Int2 iIndexMatrix;
+			for (iIndexMatrix.y = 0; iIndexMatrix.y < i.y; iIndexMatrix.y++)
+			{
+				if(iPatamar.y == 7){
+					iPatamar.y = 0;
+				}else{
+					iPatamar.y++;
+				}
+			}
+			
+			for (iIndexMatrix.x = 0; iIndexMatrix.x < i.x; iIndexMatrix.x++)
+			{
+				if(iPatamar.x == 7){
+					iPatamar.x = 0;
+				}else{
+					iPatamar.x++;
+				} 
+			}
+
+			p = indexMatrix[iPatamar.x][iPatamar.y];
+			Pixel newI = img[i.x][i.y];
+			double r = pixelGrayAverage(newI)/4.0;
+
+			if(r>p){
+				//branco
+				newI.red = 255;
+				newI.green = 255;
+				newI.blue = 255;
+			}else{
+				//preto
+				newI.red = 0;
+				newI.green = 0;
+				newI.blue = 0;
+			}
+			
+			res[i.x][i.y] = newI;
+
+		}
+	}
+	return n;
 }
 
 Int2 imageSteganography(Image img, Int2 n, String s, Image res)
 {
+
 	return int2Error;
 }
 
